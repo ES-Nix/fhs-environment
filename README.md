@@ -1,7 +1,8 @@
 
 
-First working fhs + hello in two steps:
+First working `fhs` + `hello`:
 
+Using only `nix` + `flakes`:
 ```
 nix build github:ES-Nix/fhs-environment/512cce8c11412140eec90fa33186d7673c75714b#fhs-environment
 ./result/fhs-env -c 'hello'
@@ -17,6 +18,12 @@ nix build .#fhs-environment
 ```
 
 
+It does not isolate environment variables, why?
+```
+nix build .#fhs-environment
+./result/fhs-env -c 'env'
+```
+
 This is in two steps:
 
 1)
@@ -31,7 +38,7 @@ Don't know how to make it in one step, none of these works:
 
 `nix develop --ignore-environment --command bash -c 'hello'`
 
-It may be needed when changing the hardcoded path: 
+It may be needed when changing the hardcoded path to the `fhs-env`: 
 `sudo nix-collect-garbage --delete-old`
 
 

@@ -1,16 +1,21 @@
-{ pkgs ? import <nixpkgs> {} }:
-
+{ pkgs ? import <nixpkgs> { } }:
 let
   fhs = pkgs.buildFHSUserEnv {
     name = "fhs-env";
     targetPkgs = pkgs: with pkgs;
-      [ 
-      hello 
+      [
+        hello
       ];
 
     multiPkgs = pkgs: with pkgs;
       [ zlib ];
     runScript = "bash";
+
+    #echo $TEST_EXPORT
+    profile = ''
+      export TEST_EXPORT='123abc'
+    '';
+
   };
 
   scriptExample = pkgs.writeShellScriptBin "script-example" ''
@@ -18,7 +23,8 @@ let
       echo 'A bash script example!'
   '';
 
-in pkgs.stdenv.mkDerivation {
+in
+pkgs.stdenv.mkDerivation {
   name = "fhs-env-derivation";
 
   # https://nix.dev/anti-patterns/language.html#reproducability-referencing-top-level-directory-with
