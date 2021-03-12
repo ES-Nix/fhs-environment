@@ -2,27 +2,9 @@
 let
   fhs = pkgs.buildFHSUserEnv {
     name = "fhs-env";
-    targetPkgs = pkgs: with pkgs;
-      [
-        hello
-      ];
-
-    multiPkgs = pkgs: with pkgs;
-      [ zlib ];
+    targetPkgs = pkgs: with pkgs; [ hello ];
     runScript = "bash";
-
-    #echo $TEST_EXPORT
-    profile = ''
-      export TEST_EXPORT='123abc'
-    '';
-
   };
-
-  scriptExample = pkgs.writeShellScriptBin "script-example" ''
-    #!${pkgs.runtimeShell}
-      echo 'A bash script example!'
-  '';
-
 in
 pkgs.stdenv.mkDerivation {
   name = "fhs-env-derivation";
@@ -33,8 +15,7 @@ pkgs.stdenv.mkDerivation {
   nativeBuildInputs = [ fhs ];
 
   installPhase = ''
-    mkdir --parent $out
-    cp -r ${fhs}/bin/fhs-env $out/fhs-env
-    cp -r ${scriptExample}/bin/script-example $out/script-example
+    mkdir --parent $out/bin
+    cp -r ${fhs}/bin/fhs-env $out/bin/fhs-env
   '';
 }

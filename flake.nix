@@ -28,11 +28,7 @@
           ];
           shellHook = ''
             echo "Entering the nix devShell"
-            export PATH=$(echo /nix/store/*-script-example/bin):$PATH
-            script-example
-
-            export PATH=$(echo /nix/store/*-fhs-env-derivation):$PATH
-            exec fhs-env
+            exec -c ${self.packages.${system}.fhs-environment}/bin/fhs-env
           '';
         };
       });
