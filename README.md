@@ -1,33 +1,43 @@
 
 
-First working `fhs` + `hello`:
-
-Using only `nix` + `flakes`:
+Using only `nix` + `flakes` have an working `fhs` + `hello`:
 ```
-nix build github:ES-Nix/fhs-environment/512cce8c11412140eec90fa33186d7673c75714b#fhs-environment
-./result/fhs-env -c 'hello'
+nix build github:ES-Nix/fhs-environment/c0d8bcd2e0e1e26c30a6b0ed20dc77108c47bcd1#fhs-environment
+./result/bin/fhs-env -c 'hello'
 ```
 
 
 ```
 git clone https://github.com/ES-Nix/fhs-environment.git
 cd fhs-environment
-git checout 512cce8c11412140eec90fa33186d7673c75714b
+git checout c0d8bcd2e0e1e26c30a6b0ed20dc77108c47bcd1
 nix build .#fhs-environment
-./result/fhs-env -c 'hello'
+./result/bin/fhs-env -c 'hello'
 ```
 
 
-It does not isolate environment variables, why?
+It isolates environment variables, how/why?
+Search in this link [`the exec -c option`](https://www.putorius.net/exec-command.html) for the text
+`the exec -c option`. So, the use of `exec -c ${self.packages.${system}.fhs-environment}/bin/fhs-env`
+explain this.
+
 ```
+git clone https://github.com/ES-Nix/fhs-environment.git
+cd fhs-environment
+git checout c0d8bcd2e0e1e26c30a6b0ed20dc77108c47bcd1
 nix build .#fhs-environment
-./result/fhs-env -c 'env'
+./result/bin/fhs-env -c 'env'
 ```
 
 This is in two steps:
 
 1)
-`nix develop --ignore-environment`
+```
+git clone https://github.com/ES-Nix/fhs-environment.git
+cd fhs-environment
+git checout c0d8bcd2e0e1e26c30a6b0ed20dc77108c47bcd1
+nix develop`
+```
 
 2)
 `hello`
@@ -37,8 +47,3 @@ Don't know how to make it in one step, none of these works:
 `nix develop --ignore-environment --command hello`
 
 `nix develop --ignore-environment --command bash -c 'hello'`
-
-It may be needed when changing the hardcoded path to the `fhs-env`: 
-`sudo nix-collect-garbage --delete-old`
-
-
