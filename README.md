@@ -47,3 +47,11 @@ Don't know how to make it in one step, none of these works:
 `nix develop --ignore-environment --command hello`
 
 `nix develop --ignore-environment --command bash -c 'hello'`
+
+
+
+./result/bin/fhs-env -c 'readlink $(which python3)'
+
+python3 -c 'import locale; locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")'
+
+file $(echo $(readlink --canonicalize $(echo $LOCALE_ARCHIVE)))
