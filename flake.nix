@@ -1,5 +1,5 @@
 {
-  description = "This is a nix flake podman rootless package";
+  description = "This is a nix flake buildFHSUserEnv environment";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
@@ -11,10 +11,8 @@
           system = "x86_64-linux";
           config = { allowUnfree = true; };
         };
-
       in
       {
-
         packages.fhs-environment = import ./fhs-environment.nix {
           pkgs = pkgs;
         };
@@ -25,16 +23,16 @@
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
-            neovim
             self.defaultPackage.${system}
             self.packages.${system}.fhs-environment
           ];
           shellHook = ''
             echo "Entering the nix devShell"
-            script-exemple
-            
-            #podman-setup-script
-            #podman-capabilities
+            export PATH=$(echo /nix/store/*-script-example/bin):$PATH
+            script-example
+
+            export PATH=$(echo /nix/store/*-fhs-env-derivation):$PATH
+            exec fhs-env
           '';
         };
       });

@@ -1,14 +1,12 @@
 { pkgs ? import <nixpkgs> {} }:
 
-let 
-
+let
   fhs = pkgs.buildFHSUserEnv {
-    name = "fsh-env";
+    name = "fhs-env";
     targetPkgs = pkgs: with pkgs;
       [ 
       hello 
       ];
-
 
     multiPkgs = pkgs: with pkgs;
       [ zlib ];
@@ -17,26 +15,20 @@ let
 
   scriptExample = pkgs.writeShellScriptBin "script-example" ''
     #!${pkgs.runtimeShell}
- 
       echo 'A bash script example!'
   '';
- 
 
 in pkgs.stdenv.mkDerivation {
   name = "fhs-env-derivation";
 
-  src = ./.;
+  # https://nix.dev/anti-patterns/language.html#reproducability-referencing-top-level-directory-with
+  src = builtins.path { path = ./.; };
 
   nativeBuildInputs = [ fhs ];
 
- installPhase = ''
-   mkdir --parent $out
-   ln -sf ${fhs}/bin/fsh-env $out/fsh-env
-   cp -r ${scriptExample}/bin/script-example $out/script-example
- '';
-
-  shellHook = ''
-    exec ${fhs}/bin/fsh-env
+  installPhase = ''
+    mkdir --parent $out
+    cp -r ${fhs}/bin/fhs-env $out/fhs-env
+    cp -r ${scriptExample}/bin/script-example $out/script-example
   '';
 }
-
