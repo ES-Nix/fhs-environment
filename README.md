@@ -3,7 +3,7 @@
 Using only `nix` + `flakes` have an working `fhs` + `hello`:
 ```
 nix build github:ES-Nix/fhs-environment/c0d8bcd2e0e1e26c30a6b0ed20dc77108c47bcd1#fhs-environment
-./result/bin/fhs-env -c 'hello'
+./result/bin/fhs-env -c 'hello && tests_locale_with_python'
 ```
 
 
@@ -13,6 +13,7 @@ cd fhs-environment
 git checout c0d8bcd2e0e1e26c30a6b0ed20dc77108c47bcd1
 nix build .#fhs-environment
 ./result/bin/fhs-env -c 'hello'
+./result/bin/fhs-env -c 'tests_locale_with_python'
 ```
 
 
@@ -40,7 +41,10 @@ nix develop`
 ```
 
 2)
-`hello`
+```
+hello
+tests_locale_with_python
+```
 
 Don't know how to make it in one step, none of these works:
 

@@ -20,6 +20,7 @@ let
         gcc
         glibc
         glibcLocales
+        ripgrep
         hello
         which
         file
@@ -43,6 +44,9 @@ let
         echo '.'
 
         python3 -c 'import locale; locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")'
+        echo '.'
+
+        env | rg 'LOCALE_ARCHIVE' || echo 'Error, environment variable LOCALE_ARCHIVE not found' || exit 123
         echo '.'
 
         file $(echo $(readlink --canonicalize $(echo $LOCALE_ARCHIVE)))
