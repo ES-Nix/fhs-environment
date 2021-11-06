@@ -8,17 +8,17 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         pkgsAllowUnfree = import nixpkgs {
-          system = "x86_64-linux";
+          inherit system;
           config = { allowUnfree = true; };
         };
       in
       {
         packages.fhs-environment = import ./fhs-environment.nix {
-          pkgs = pkgs;
+          pkgs = pkgsAllowUnfree;
         };
 
         defaultPackage = import ./fhs-environment.nix {
-          pkgs = pkgs;
+          pkgs = pkgsAllowUnfree;
         };
 
         devShell = pkgsAllowUnfree.mkShell {
@@ -28,11 +28,13 @@
           ];
           shellHook = ''
             echo "Entering the nix devShell"
-            export PATH=$(echo /nix/store/*-script-example/bin):$PATH
-            script-example
 
-            export PATH=$(echo /nix/store/*-fhs-env-derivation):$PATH
-            exec fhs-env
+            export PATH=${self.packages.${system}.fhs-environment}:$PATH
+
+            # Just as example script
+            script-example
+            exec enter-fhs
+
           '';
         };
       });
