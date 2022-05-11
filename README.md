@@ -42,3 +42,136 @@ It may be needed when changing the hardcoded path to the `fhs-env`:
 `sudo nix-collect-garbage --delete-old`
 
 
+```bash
+nix \
+shell \
+--impure \
+--expr \
+'(
+with builtins.getFlake "nixpkgs";  
+with legacyPackages.${builtins.currentSystem}; 
+  (
+    buildFHSUserEnv { name = "fhs"; }
+  )
+)' \
+--command \
+fhs
+```
+
+```bash
+nix \
+shell \
+--ignore-environment \
+--impure \
+--expr \
+'(
+with builtins.getFlake "nixpkgs";  
+with legacyPackages.${builtins.currentSystem}; 
+  (
+    buildFHSUserEnv { 
+      name = "fhs";
+      targetPkgs = pkgs: with (builtins.getFlake "nixpkgs"); [
+          bashInteractive
+          hello
+          cowsay          
+        ];
+      runScript = "bash";
+    }
+  )
+)' \
+--command \
+fhs \
+-c \
+"hello | cowsay" 
+```
+
+```bash
+nix \
+shell \
+--impure \
+--expr \
+'(
+with builtins.getFlake "nixpkgs";  
+with legacyPackages.${builtins.currentSystem}; 
+  (
+    buildFHSUserEnv { 
+      name = "fhs";
+      targetPkgs = pkgs: with (builtins.getFlake "nixpkgs"); [
+          bashInteractive
+          pkgsStatic.xorg.xclock
+        ];
+      runScript = "bash";
+    }
+  )
+)' \
+--command \
+fhs \
+-c \
+"xclock"
+```
+
+
+```bash
+nix \
+shell \
+--ignore-environment \
+--impure \
+--expr \
+'(
+with builtins.getFlake "nixpkgs";  
+with legacyPackages.${builtins.currentSystem}; 
+  (
+    buildFHSUserEnv { 
+      name = "fhs";
+      targetPkgs = pkgs: with (builtins.getFlake "nixpkgs"); [
+          bashInteractive
+          pkgsStatic.xorg.xclock
+        ];
+      runScript = "bash";
+    }
+  )
+)' \
+--command \
+fhs \
+-c \
+"xclock"
+```
+
+```bash
+nix \
+shell \
+--impure \
+--expr \
+'(
+with builtins.getFlake "nixpkgs";  
+with legacyPackages.${builtins.currentSystem}; 
+  (
+    buildFHSUserEnv { 
+      name = "fhs";
+      targetPkgs = pkgs: with (builtins.getFlake "nixpkgs"); [
+          hello
+          cowsay
+          figlet
+        ];
+      runScript = "bash";
+    }
+  )
+)' \
+--command \
+fhs \
+-c \
+"hello | cowsay" 
+```
+
+
+```bash
+nix \
+shell \
+--ignore-environment \
+--store ~/my-nix \
+nixpkgs#bashInteractive \
+nixpkgs#hello \
+nixpkgs#pkgsStatic.nix \
+-c \
+bash
+```
